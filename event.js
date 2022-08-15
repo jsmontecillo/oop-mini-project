@@ -4,10 +4,11 @@ class Event {
         this.description = description;
         this.date = date;
         this.availableTickets = [];
-    }
+    };
+
     addAvailableTickets = (ticketName, price) => {
         this.availableTickets.push(new TicketType(ticketName, price));
-    }
+    };
 
     allTickets = () => {
         let ticketStatement = "All tickets: "
@@ -15,9 +16,12 @@ class Event {
             ticketStatement += `${i+1}. ${this.availableTickets[i].name} ($${this.availableTickets[i].price}) `;
         }
         return ticketStatement;
-    }
+    };
 
     searchTickets = (lower, upper) => {
+        if(lower === upper || lower < 0 || upper < 0) {
+            return "Invalid range";
+        }
         let ticketStatement = "Eligible tickets: "
         let counter = 1;
         for(let i = 0; i < this.availableTickets.length; i++) {
@@ -26,8 +30,16 @@ class Event {
                 counter++; 
             }
         }
+        if(counter === 1){
+            return "No tickets available";
+        }
         return ticketStatement;
-    }
+    };
+
+    cheapestTicket = () => {
+       this.cheapest = this.availableTickets.reduce((a,b) => {return a.price < b.price ? `${a.name} ($${a.price})` : `${b.name} ($${b.price})`});
+       return this.cheapest;
+    };
 }
 
 class TicketType {
@@ -59,16 +71,6 @@ const eventArray = new Array();
 
 eventArray.push(eventObj1, eventObj2, eventObj3);
 console.log(eventArray);
-console.log(eventObj3.searchTickets(0, 250));
-
-document.addEventListener('DOMContentLoaded', () => {
-    let html = '';
-    eventArray.forEach((item) => {
-        html += `<li>${item.name} - ${item.description} - ${item.date} - ${item.allTickets()}`; 
-    });
-    document.querySelector('#event').innerHTML = html;
-});
-
 
 eventObj2.addAvailableTickets("General Admission", 25);
 eventObj2.addAvailableTickets("Floor Seating", 80);
@@ -76,3 +78,25 @@ eventObj2.addAvailableTickets("Floor Seating", 80);
 eventObj3.addAvailableTickets("Orchestra", 300);
 eventObj3.addAvailableTickets("Mezzanine", 200);
 eventObj3.addAvailableTickets("Balcony", 100);
+
+//array of available tickets
+console.log(eventObj2.availableTickets);
+console.log(eventObj3.availableTickets);
+
+//ticket searcher
+console.log(eventObj3.searchTickets(0, 250));
+console.log(eventObj3.searchTickets(0, 100));
+console.log(eventObj3.searchTickets(150, 300));
+console.log(eventObj3.searchTickets(0, 350));
+console.log(eventObj3.searchTickets(0, 99));
+
+console.log(eventObj3.cheapestTicket());
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    let html = '';
+    eventArray.forEach((item) => {
+        html += `<li>${item.name} - ${item.description} - ${item.date} - ${item.allTickets()}<br>Cheapest Ticket: ${item.cheapestTicket()}`; 
+    });
+    document.querySelector('#event').innerHTML = html;
+});
