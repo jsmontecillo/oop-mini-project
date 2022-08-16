@@ -37,8 +37,14 @@ class Event {
     };
 
     cheapestTicket = () => {
-       this.cheapest = this.availableTickets.reduce((a,b) => {return a.price < b.price ? `${a.name} ($${a.price})` : `${b.name} ($${b.price})`});
-       return this.cheapest;
+        if(this.availableTickets.length === 0){
+            this.cheapest = "No tickets available"
+            return this.cheapest;
+        } else {
+            this.cheapest = this.availableTickets.reduce((a,b) => {return a.price < b.price ? `${a.name} ($${a.price})` : `${b.name} ($${b.price})`});
+            return this.cheapest;
+        }
+       
     };
 }
 
@@ -89,8 +95,6 @@ console.log(eventObj3.searchTickets(0, 100));
 console.log(eventObj3.searchTickets(150, 300));
 console.log(eventObj3.searchTickets(0, 350));
 console.log(eventObj3.searchTickets(0, 99));
-
-console.log(eventObj3.cheapestTicket());
 
 
 document.addEventListener('DOMContentLoaded', () => {
